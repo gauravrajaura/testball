@@ -3,8 +3,13 @@ from django.db.models import CharField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from testball.core.model_mixins import (
+    SlugMixin,
+    UUIDMixin,
+    IPAddressMixin
+)
 
-class User(AbstractUser):
+class User(AbstractUser, UUIDMixin, IPAddressMixin):
     """
     Default custom user model for Testball.
     If adding fields that need to be filled at user signup,

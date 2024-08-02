@@ -278,3 +278,8 @@ testball/media/
 .ipython/
 .env
 .envs/*
+
+### Migrations
+
+testball/*/migrations/*.py
+testball/*/migrations/*.pyc
