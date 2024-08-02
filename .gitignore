@@ -283,3 +283,5 @@ testball/media/
 
 testball/*/migrations/*.py
 testball/*/migrations/*.pyc
+
+*temp*.py

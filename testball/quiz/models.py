@@ -1,6 +1,9 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+
+# Project Imports
 from testball.core.model_mixins import (
     SlugMixin,
     UUIDMixin,
@@ -61,15 +64,24 @@ class Question(UUIDMixin):
     def __str__(self):
         return self.question_text
 
-# Choice model for MCQ
 class Choice(UUIDMixin):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices')
-    choice_text = models.CharField(max_length=255)
+    question = models.ForeignKey('Question', on_delete=models.CASCADE, related_name='choices')
+    choice_text = models.CharField(max_length=255, blank=True, null=True)
     is_correct = models.BooleanField(default=False)
     multimedia_content = models.FileField(upload_to='questions/multimedia/', blank=True, null=True)
 
     def __str__(self):
-        return self.choice_text
+        return self.choice_text or str(self.multimedia_content)
+
+    def clean(self):
+        # Ensure that at least one of choice_text or multimedia_content is provided
+        if not self.choice_text and not self.multimedia_content:
+            raise ValidationError('Either choice text or multimedia content must be provided.')
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
 # Blog model
 class Blog(SlugMixin, UUIDMixin):
