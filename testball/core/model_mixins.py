@@ -79,7 +79,7 @@ class SlugMixin(models.Model):
         abstract = True
 
 
-class UUIDMixin(TimeStampedModel):
+class UUIDMixin(TimeStampedModel, StatusMixin):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
 
     class Meta:
